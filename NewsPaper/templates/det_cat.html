@@ -1,0 +1,71 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Category {{ category }}
+{% endblock title %}
+
+{% block content %}
+<h1>News from the category {{ category }}</h1>
+
+{% if user not in category.subscribers.filter %}
+
+<a class="btn btn-info" href="{% url 'subscribe' category.id %}">
+    Subscribe to a category
+</a>
+{% else %}
+<h6>
+    You are already subscribed to this category.
+    <a class="btn btn-info" href="{% url 'unsubscribe' category.id %}">
+        Click
+    </a>
+    to unsubscribe from the mailing list.
+
+</h6>
+{% endif %}
+
+{% if cat_posts|length > 0 %}
+<table>
+    <tr>
+        <td><u>Title</u></td>
+        <td width="150"><u>Date</u></td>
+        <td><u>Preview</u></td>
+    </tr>
+    {% for post in cat_posts %}
+    <tr>
+        <td>
+            <a href="{% url 'new_s' post.id %}">{{ post.title|censor }}</a>
+        </td>
+        <td>{{ post.timePost|date:'d-N-Y' }}</td>
+        <td>{{ post.textPost|censor|truncatechars:50 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h2>No news!</h2>
+{% endif %}
+
+{% if is_paginated %}
+
+{% if page_obj.has_previous %}
+<a href="?page=1">First</a>
+<a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+{% if page_obj.number == num %}
+<a>{{ num }}</a>
+{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+<a href="?page={{ num }}">{{ num }}</a>
+{% endif %}
+{% endfor %}
+
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">>>></a>
+<a href="?page={{ page_obj.paginator.num_pages }}">End</a>
+{% endif %}
+
+{% endif %}
+
+{% endblock content %}

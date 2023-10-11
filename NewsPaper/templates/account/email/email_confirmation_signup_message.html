@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration NewsPaper</title>
+</head>
+<body>
+    {% load account %}
+    <h1>Dear {{ user.username }}, thank you for registering on the NewsPaper!</h1>
+    <h3>To activate your account <a href="{{ activate_url }}">follow the link</a></h3>
+</body>
+</html>
